@@ -178,8 +178,8 @@ class F2Z(object):
                 'updated_at': fd_ticket['updated_at'],
                 'requester': {
                     'name': fd_user['name'],
-                    # 'email': fd_user['email'],
-                    'email': 'ivan@voyajoy.com'
+                    'email': fd_user['email'],
+                    # 'email': 'ivan@voyajoy.com'
                 }
             }
         )
@@ -256,14 +256,16 @@ class F2Z(object):
         attachments = fd_ticket['attachments']
         if attachments:
             # to_attach = list()
-            for attachment in attachments[:1]:
+            for attachment in attachments:
                 file_name = attachment['content_file_name']
+                print 'uploading attachment', file_name
                 content_type = attachment['content_content_type']
                 file_size = attachment['content_file_size']
                 content_url = attachment['attachment_url']
                 a_data = dict(
                     filename=file_name,
-                    content_type=content_type,
+                    # token='6266674386',
+                    # content_type=content_type,
                     # size=file_size,
                     # content_url=content_url
                 )
@@ -273,7 +275,7 @@ class F2Z(object):
                 response = post(
                     url=self.zendesk_base_url + '/api/v2/uploads.json',
                     params=a_data,
-                    files={file_name: open('/Users/ivanthai/temp/temp.JPG', 'r')},
+                    data=open('/Users/ivanthai/temp/temp.JPG', 'rb').read(),
                     headers={
                         'Authorization': self.zendesk_header_auth,
                         'Content-Type': 'application/binary'
@@ -383,7 +385,7 @@ Status: {status}
         fail = 0
         success = 0
         for i in xrange(ticket_max):
-            fd_tid = i + 1 + 8999
+            fd_tid = i + 1 + 8998
             try:
                 self.migrate_ticket(fd_tid)
             except Exception as e:
